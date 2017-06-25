@@ -27,12 +27,16 @@ describe Life do
   describe '#play_game' do
 
     context 'while there is at least one live cell' do
-      it 'shows the current state of the board'
+      it 'calls #draw_board'
       it 'cycles the cells to the next state'
     end
 
     context 'when there are no live cells' do
       it 'states that the game is over'
     end
+  end
+
+  describe '#draw_board' do
+    it 'draws the current state of the game board'
   end
 end
