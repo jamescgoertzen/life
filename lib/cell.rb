@@ -5,7 +5,7 @@ require 'board'
 
 class Cell
 
-  attr_reader :position, :state
+  attr_reader :position, :state, :next_state
 
   ALIVE = :alive
   DEAD = :dead
@@ -20,7 +20,7 @@ class Cell
 
   def to_next_state
     get_next_state
-    @state.replace(@next_state)
+    @state = @next_state
   end
 
   # If alive potentially die

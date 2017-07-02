@@ -1,8 +1,11 @@
 require 'board'
 
-# The Life class is responsible for asking for an area,
-# cycling cells to the next state, and ending the game
+# The Life class is responsible for asking for a valid area, initializing the
+# board, playing the game while at least one cell is alive, and ending the
+# game if it goes over 100 rounds
 class Life
+
+  attr_reader :board
 
   def initialize(board_size)
     if board_size > 0 && board_size < 11

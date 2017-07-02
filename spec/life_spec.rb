@@ -4,21 +4,21 @@ describe Life do
 
   let(:alive) { Life::ALIVE }
   let(:dead) { Life::DEAD }
-  let(:game) { Life.new(board_size) }
+  let(:life) { Life.new(board_size) }
+  let(:board) { life.board }
 
   describe '#initialize' do
-    context 'when the size provided is between 1 and 10' do
-      let!(:board_size) { 5 }
-      it 'creates a board of this size' do
-        expect(Board).to receive(:new).with(dimensions: board_size)
 
-        game
-      end
+    context 'when the size provided is between 1 and 10' do
+      let(:board_size) { 5 }
+
+      it 'creates a board of this size'
 
       it 'calls the #play_game method' do
+        board = instance_double("Board")
         allow(Board).to receive(:new)
 
-        expect(game).to receive(:play_game)
+        expect(Life.new(board_size)).to receive(:play_game)
       end
     end
 
@@ -32,9 +32,17 @@ describe Life do
   end
 
   describe '#play_game' do
+    let(:board_size) { 5 }
 
     context 'while there is at least one live cell' do
-      it 'calls #draw_board'
+      it 'calls #draw_board' do
+        board = instance_double("Board")
+        allow(Board).to receive(:new).and_return(board)
+        allow(board).to receive(:living_cells).and_return(1)
+        expect(board).to receive(:all_cells_to_next_state).exactly(100.times)
+
+        life.play_game
+      end
       it 'cycles the cells to the next state'
     end
 
