@@ -1,46 +1,48 @@
 require 'board'
 
 describe Board do
+  let(:board) { Board.new(dimensions: board_size) }
+  let(:all_cells) { board.all_cells }
+  let(:board_size) { 3 }
 
-  describe '#initialize' do
-    it 'creates a cell for each dimension'
+  before :example do
+    cell = instance_double("Cell", to_next_state: nil)
+    allow(Cell).to receive(:new).and_return(cell)
   end
 
-  describe '#get_neighbours' do
-    context 'when the cell provided is the top left corner' do
-      it 'gives the correct 3 neighbours'
+  describe '#initialize' do
+    it 'creates a cell for each position' do
+      expect(all_cells.length).to eq(9)
+
+      board
+    end
+  end
+
+  describe '#get_live_neighbours' do
+    it 'calls #alive? on each cell in @all_cells' do
+      cell = spy("Cell")
+
+      expect(cell).to receive(:alive?)
+
+      board.get_live_neighbours
     end
 
-    context 'when the cell provided is on the top row' do
-      it 'gives the correct 5 neighbours'
-    end
+    it ''
+  end
 
-    context 'when the cell provided is the top right corner' do
-      it ' gives the correct 3 neighbours'
+  describe '#possible_neighbours' do
+    it 'creates an array of all possible neighbours' do
+      expect((board.possible_neighbours([1,1])).length).to eq(8)
     end
+  end
 
-    context 'when the cell provided is in the right column' do
-      it 'gives the correct 5 neighbours'
-    end
+  describe '#all_cells_to_next_state' do
+    it 'calls #to_next_state on each cell' do
+      cell = spy("Cell")
 
-    context 'when the cell provided is the bottom right corner' do
-      it 'gives the correct 3 neighbours'
-    end
+      expect(cell).to receive(:to_next_state)
 
-    context 'when the cell provided is on the bottom row' do
-      it 'gives the correct 5 neighbours'
-    end
-
-    context 'when the cell provided is the bottom left corner' do
-      it 'gives the correct 3 neighbours'
-    end
-
-    context 'when the cell provided is on the left column' do
-      it 'gives the correct 5 neighbours'
-    end
-
-    context 'when the cell is in the center' do
-      it 'gives the correct 8 neighbours'
+      board.all_cells_to_next_state
     end
   end
 

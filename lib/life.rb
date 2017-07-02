@@ -10,7 +10,6 @@ class Life
   def initialize(board_size)
     if board_size > 0 && board_size < 11
       @board = Board.new(dimensions: board_size)
-      play_game
     else
       abort("Invalid board size.")
     end

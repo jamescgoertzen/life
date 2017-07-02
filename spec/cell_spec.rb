@@ -58,7 +58,7 @@ describe Cell do
 
     context 'when @state is dead' do
       before :example do
-        cell.state = dead
+        state = dead
       end
 
       context 'and when #neighbours returns the max neighbours' do
@@ -85,7 +85,7 @@ describe Cell do
 
     context 'when @state is alive' do
       before :example do
-        cell.state = alive
+        state = alive
       end
 
       context 'and when #neighbours returns less than min neighbours' do

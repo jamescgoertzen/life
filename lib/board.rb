@@ -4,7 +4,9 @@ require 'cell'
 # The Board class is responsible for creating the board, creating a cell for each location on the board, and providing a cell with it's neighbours
 class Board
 
-  def initialize(dimensions)
+  attr_reader :all_cells
+
+  def initialize(dimensions:)
     @all_cells = Array.new
     for x in (1..dimensions) do
       for y in (1..dimensions) do

@@ -44,7 +44,7 @@ class Cell
   end
 
   def alive?
-    if self.state(ALIVE)
+    if @state == ALIVE
       return true
     else
       return false
