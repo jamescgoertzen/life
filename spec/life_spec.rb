@@ -9,8 +9,18 @@ describe Life do
 
   describe '#initialize' do
 
-    context 'when the size provided is between 1 and 10' do
-      let(:board_size) { 5 }
+    context 'when the size provided is 1' do
+      let(:board_size) { 1 }
+
+      it 'creates a new board and sends it the size' do
+        expect(Board).to receive(:new).with(dimensions: board_size)
+
+        life
+      end
+    end
+
+    context 'when the size provided is 10' do
+      let(:board_size) { 10 }
 
       it 'creates a new board and sends it the size' do
         expect(Board).to receive(:new).with(dimensions: board_size)
