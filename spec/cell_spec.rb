@@ -11,6 +11,7 @@ describe Cell do
   let(:position) { cell.position }
   let(:x) { 1 }
   let(:y) { 1 }
+  let(:board) { cell.board }
 
   describe '#initialize' do
     it 'sets an initial cell state' do
@@ -19,22 +20,6 @@ describe Cell do
 
     it 'sets the cell coordinates' do
       expect(cell.position).to eq([1,1])
-    end
-  end
-
-  describe '#to_next_state' do
-    it 'calls #get_next_state' do
-      expect(cell).to receive(:get_next_state)
-
-      cell.to_next_state
-    end
-    it 'replaces @state with @next_state' do
-      allow(cell).to receive(:get_next_state)
-      expect(cell.state).to_not eq(cell.next_state)
-
-      cell.to_next_state
-
-      expect(cell.state).to eq(cell.next_state)
     end
   end
 
@@ -57,70 +42,95 @@ describe Cell do
     end
 
     context 'when @state is dead' do
-      before :example do
-        state = dead
-      end
+      let(:cell) { Cell.new(state: dead, x: x, y: y, board: double("Board")) }
 
-      context 'and when #neighbours returns the max neighbours' do
+      context 'and when #live_neighbours returns the max neighbours' do
         before :example do
-          allow(cell).to receive(:neighbours).and_return(max_neighbours)
+          allow(cell).to receive(:live_neighbours).and_return(max_neighbours)
         end
+
         it_behaves_like "it will live"
       end
 
-      context 'and when #neighbours returns less than the max neighbours' do
+      context 'and when #live_neighbours returns less than the max neighbours' do
         before :example do
-          allow(cell).to receive(:neighbours).and_return(max_neighbours-1)
+          allow(cell).to receive(:live_neighbours).and_return(max_neighbours-1)
         end
+
         it_behaves_like "it will die"
       end
 
-      context 'and when #neighbours returns more than the max neighbours' do
+      context 'and when #live_neighbours returns more than the max neighbours' do
         before :example do
-          allow(cell).to receive(:neighbours).and_return(max_neighbours+1)
+          allow(cell).to receive(:live_neighbours).and_return(max_neighbours+1)
         end
+
         it_behaves_like "it will die"
       end
     end
 
     context 'when @state is alive' do
-      before :example do
-        state = alive
-      end
+      let(:cell) { Cell.new(state: alive, x: x, y: y, board: double("Board")) }
 
-      context 'and when #neighbours returns less than min neighbours' do
+      context 'and when #live_neighbours returns less than min neighbours' do
         before :example do
-          allow(cell).to receive(:neighbours).and_return(min_neighbours-1)
+          allow(cell).to receive(:live_neighbours).and_return(min_neighbours-1)
         end
         it_behaves_like "it will die"
       end
 
-      context 'and when #neighbours returns more than max neighbours' do
+      context 'and when #live_neighbours returns more than max neighbours' do
         before :example do
-          allow(cell).to receive(:neighbours).and_return(max_neighbours+1)
+          allow(cell).to receive(:live_neighbours).and_return(max_neighbours+1)
         end
         it_behaves_like "it will die"
       end
 
-      context 'and when #neighbours returns the min neighbours' do
+      context 'and when #live_neighbours returns the min neighbours' do
         before :example do
-          allow(cell).to receive(:neighbours).and_return(min_neighbours)
+          allow(cell).to receive(:live_neighbours).and_return(min_neighbours)
         end
         it_behaves_like "it will live"
       end
 
-      context 'and when #neighbours returns the max neighbours' do
+      context 'and when #live_neighbours returns the max neighbours' do
         before :example do
-          allow(cell).to receive(:neighbours).and_return(max_neighbours)
+          allow(cell).to receive(:live_neighbours).and_return(max_neighbours)
         end
         it_behaves_like "it will live"
       end
     end
   end
 
-  describe '#neighbours' do
-    it 'calls #get_neighbours from the board'
+  describe '#live_neighbours' do
+    it 'calls #get_neighbours from the board' do
+      expect(board).to receive(:get_live_neighbours).with(position)
+
+      cell.live_neighbours
+    end
   end
 
+  describe '#to_next_state' do
+    it 'sets the @state of the cell to the @next_state' do
+      expect(cell.state).to_not eq(cell.next_state)
+
+      cell.to_next_state
+
+      expect(cell.state).to eq(cell.next_state)
+    end
+  end
+
+  describe '#alive?' do
+    let(:live_cell) { Cell.new(state: alive, x: x, y: y, board: double("Board")) }
+    let(:dead_cell) { Cell.new(state: dead, x: x, y: y, board: double("Board")) }
+
+    it 'returns true if the cell is alive' do
+      expect(live_cell.alive?).to eq(true)
+    end
+    
+    it 'returns false if the cell is dead' do
+      expect(dead_cell.alive?).to eq(false)
+    end
+  end
 
 end

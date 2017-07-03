@@ -5,7 +5,7 @@ require 'board'
 
 class Cell
 
-  attr_reader :position, :state, :next_state
+  attr_reader :position, :state, :next_state, :board
 
   ALIVE = :alive
   DEAD = :dead
@@ -18,19 +18,15 @@ class Cell
     @board = board
   end
 
-  def to_next_state
-    @state = @next_state
-  end
-
   # If alive potentially die
   # if dead, potentially come alive
   # Return a new cell
   def get_next_state
-    if @state == DEAD && neighbours == MAX_NEIGHBOURS
+    if @state == DEAD && live_neighbours == MAX_NEIGHBOURS
       @next_state = ALIVE
-    elsif @state == ALIVE && (neighbours < MIN_NEIGHBOURS || neighbours > MAX_NEIGHBOURS)
+    elsif @state == ALIVE && (live_neighbours < MIN_NEIGHBOURS || live_neighbours > MAX_NEIGHBOURS)
       @next_state = DEAD
-    elsif @state == ALIVE && (neighbours == MIN_NEIGHBOURS || neighbours == MAX_NEIGHBOURS)
+    elsif @state == ALIVE && (live_neighbours == MIN_NEIGHBOURS || live_neighbours == MAX_NEIGHBOURS)
       @next_state = ALIVE
     else
       @next_state = DEAD
@@ -38,8 +34,12 @@ class Cell
   end
 
   # Just grab the neighbours from the board
-  def neighbours
+  def live_neighbours
     @board.get_live_neighbours(@position)
+  end
+
+  def to_next_state
+    @state = @next_state
   end
 
   def alive?
