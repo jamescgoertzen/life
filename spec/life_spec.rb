@@ -41,14 +41,26 @@ describe Life do
 
   describe '#play_game' do
     let(:board_size) { 5 }
+    before :each do
+      game_board = double("Board")
+      allow(Board).to receive(:new).and_return(game_board)
+    end
 
     context 'while there is at least one live cell' do
-      it 'plays the game up to 100 times' do
-        game_board = double("Board")
-        allow(Board).to receive(:new).and_return(game_board)
+      it 'calls #all_cells_get_next_state 1000 times' do
         allow(board).to receive(:living_cells).and_return(1)
+        allow(board).to receive(:all_cells_to_next_state)
 
-        expect(board).to receive(:all_cells_to_next_state).exactly(100).times
+        expect(board).to receive(:all_cells_get_next_state).exactly(1000).times
+
+        life.play_game
+      end
+
+      it 'calls #all_cells_to_next_state 1000 times' do
+        allow(board).to receive(:living_cells).and_return(1)
+        allow(board).to receive(:all_cells_get_next_state)
+
+        expect(board).to receive(:all_cells_to_next_state).exactly(1000).times
 
         life.play_game
       end
@@ -56,8 +68,6 @@ describe Life do
 
     context 'when there are no live cells' do
       it 'states the number of rounds the game went for' do
-        game_board = double("Board")
-        allow(Board).to receive(:new).and_return(game_board)
         allow(board).to receive(:living_cells).and_return(0)
 
         expect(board).to receive(:all_cells_to_next_state).exactly(0).times

@@ -19,7 +19,6 @@ class Cell
   end
 
   def to_next_state
-    get_next_state
     @state = @next_state
   end
 

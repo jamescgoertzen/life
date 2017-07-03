@@ -1,7 +1,9 @@
 require 'life'
 require 'cell'
 
-# The Board class is responsible for creating the board, creating a cell for each location on the board, and providing a cell with it's neighbours
+# The Board class is responsible for creating the board, creating a cell for
+# each location on the board, providing a cell with it's neighbours, and
+# verifying whether or not any cells are alive
 class Board
 
   attr_reader :all_cells
@@ -31,6 +33,12 @@ class Board
     [cell_position[0],cell_position[1]-1],
     [cell_position[0]-1,cell_position[1]-1],
     [cell_position[0]-1,cell_position[1]]]
+  end
+
+  def all_cells_get_next_state
+    @all_cells.each do |cell|
+      cell.get_next_state
+    end
   end
 
   def all_cells_to_next_state
